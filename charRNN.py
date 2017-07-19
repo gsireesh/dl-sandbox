@@ -6,6 +6,7 @@
 import tensorflow as tf
 import numpy as np
 import random
+import string
 
 
 # In[2]:
@@ -22,10 +23,10 @@ word_list = list(filter(lambda x : len(x) >= 5, word_list))
 #hyperameters
 seq_length = 4
 learning_rate = 1e-1
-state_size = 4
+state_size = 8
 vocab_size = len(chars)
 batch_size = 1
-num_epochs = 100
+num_epochs = 1000
 
 
 # In[16]:
@@ -53,14 +54,14 @@ def word_mat(word):
 X = tf.placeholder(tf.float32, [vocab_size, seq_length])
 y = tf.placeholder(tf.float32, [vocab_size, seq_length])
 
-Wxh = tf.Variable(tf.truncated_normal([state_size, vocab_size]), name='Wxh')
-Whh = tf.Variable(tf.truncated_normal([state_size, state_size]), name ='Whh')
-bh = tf.Variable(tf.truncated_normal([state_size, 1]))
+Wxh1 = tf.Variable(tf.truncated_normal([state_size, vocab_size]), name='Wxh1')
+Whh1 = tf.Variable(tf.truncated_normal([state_size, state_size]), name ='Whh1')
+bh1 = tf.Variable(tf.truncated_normal([state_size, 1]))
 
-Why = tf.Variable(tf.truncated_normal([vocab_size, state_size]), name='Why')
-by = tf.Variable(tf.truncated_normal([vocab_size, 1]))
+Why1 = tf.Variable(tf.truncated_normal([vocab_size, state_size]), name='Why1')
+by1 = tf.Variable(tf.truncated_normal([vocab_size, 1]))
 
-initial_state = tf.placeholder(tf.float32, [state_size,1])
+initial_state1 = tf.placeholder(tf.float32, [state_size,1])
 
 
 # In[7]:
@@ -68,9 +69,9 @@ initial_state = tf.placeholder(tf.float32, [state_size,1])
 x_predict = tf.placeholder(tf.float32, [vocab_size,1])
 current_state_predict = tf.placeholder(tf.float32, [state_size, 1])
 
-y_logit = tf.matmul(Why,current_state_predict) + by
+y_logit = tf.matmul(Why1,current_state_predict) + by1
 y_predict = tf.nn.softmax(y_logit,dim=0)
-next_state_predict = tf.tanh(tf.matmul(Wxh, x_predict) + tf.matmul(Whh, current_state_predict) + bh)
+next_state_predict = tf.tanh(tf.matmul(Wxh1, x_predict) + tf.matmul(Whh1, current_state_predict) + bh1)
 
 
 # In[8]:
@@ -81,15 +82,15 @@ output_series = tf.unstack(y, axis=1)
 
 # In[9]:
 
-current_state = initial_state
+current_state = initial_state1
 prediction_series = []
 logit_series = []
 
 for current_input in input_series:
     current_input = tf.reshape(current_input, [vocab_size, 1])
     
-    next_state = tf.tanh(tf.matmul(Wxh, current_input) + tf.matmul(Whh, current_state) + bh)
-    logit = tf.matmul(Why, current_state) + by
+    next_state = tf.tanh(tf.matmul(Wxh1, current_input) + tf.matmul(Whh1, current_state) + bh1)
+    logit = tf.matmul(Why1, current_state) + by1
     logit_series.append(logit)
     prediction = tf.nn.softmax(logit,dim=0)
     prediction_series.append(prediction)
@@ -134,23 +135,26 @@ with tf.Session() as sess:
     for i in range(num_epochs):
         _current_state = np.zeros((state_size, 1))
         random.shuffle(word_list)
-        for word in word_list:
+        long_list = word_list
+        random.shuffle(word_list)
+        long_list += word_list
+        for word in long_list:
             for shifted_pair in generate_shifted_pairs(word, seq_length):
                 x_shift = np.reshape(word_mat(shifted_pair[0]), [vocab_size, seq_length])
                 y_shift = np.reshape(word_mat(shifted_pair[1]), [vocab_size, seq_length])
-                _, _total_loss, _current_state, _pred_series = sess.run([train_step, total_loss, current_state, prediction_series], feed_dict={X:x_shift, y:y_shift, initial_state:_current_state})
+                _, _total_loss, _current_state, _pred_series = sess.run([train_step, total_loss, current_state, prediction_series], feed_dict={X:x_shift, y:y_shift, initial_state1:_current_state})
                 
         print(_total_loss)
-
-        seed_char = random.choice(chars)
-        predict_char = one_hot(seed_char)
-        seed_state = np.zeros([state_size, 1])
-        generated = seed_char
-        for i in range(random.randint(5,10)):
-            _y, _logit, seed_state = sess.run([y_predict, y_logit, next_state_predict], feed_dict={x_predict:predict_char, current_state_predict:seed_state})
-            generated += chars[np.argmax(_y)]
-            predict_char = one_hot(chars[np.argmax(_y)])
-        print(generated)
+        for j in range(5):
+            seed_char = random.choice(string.ascii_lowercase)
+            predict_char = one_hot(seed_char)
+            seed_state = np.zeros([state_size, 1])
+            generated = seed_char
+            for i in range(random.randint(5,10)):
+                _y, _logit, seed_state = sess.run([y_predict, y_logit, next_state_predict], feed_dict={x_predict:predict_char, current_state_predict:seed_state})
+                generated += chars[np.argmax(_y)]
+                predict_char = one_hot(chars[np.argmax(_y)])
+            print(generated)
             
     
                 

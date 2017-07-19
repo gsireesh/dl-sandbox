@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="51a46a8e-e9f0-4089-bffa-f467134341df" name="Default" comment="" />
+    <list default="true" id="51a46a8e-e9f0-4089-bffa-f467134341df" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/charRNN.py" afterPath="$PROJECT_DIR$/charRNN.py" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,11 +17,11 @@
       <file leaf-file-name="charRNN.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/charRNN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="660">
-              <caret line="97" column="90" lean-forward="false" selection-start-line="97" selection-start-column="90" selection-end-line="97" selection-end-column="90" />
+            <state relative-caret-position="586">
+              <caret line="153" column="56" lean-forward="true" selection-start-line="153" selection-start-column="56" selection-end-line="153" selection-end-column="56" />
               <folding>
                 <element signature="e#28#51#0" expanded="true" />
-                <marker date="1500438088723" expanded="true" signature="3768:4246" ph="..." />
+                <marker date="1500439978608" expanded="true" signature="3929:4456" ph="..." />
               </folding>
             </state>
           </provider>
@@ -43,6 +45,7 @@
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -92,7 +95,8 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/AppData/Local/GitHubDesktop/app-0.7.0/resources/app/git/mingw64/bin/git.exe" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -263,11 +267,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/charRNN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="97" column="90" lean-forward="false" selection-start-line="97" selection-start-column="90" selection-end-line="97" selection-end-column="90" />
+        <state relative-caret-position="586">
+          <caret line="153" column="56" lean-forward="true" selection-start-line="153" selection-start-column="56" selection-end-line="153" selection-end-column="56" />
           <folding>
             <element signature="e#28#51#0" expanded="true" />
-            <marker date="1500438088723" expanded="true" signature="3768:4246" ph="..." />
+            <marker date="1500439978608" expanded="true" signature="3929:4456" ph="..." />
           </folding>
         </state>
       </provider>
