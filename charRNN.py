@@ -15,7 +15,7 @@ f = open('drug_names.txt','r')
 input_text = f.read()
 chars = list(set(input_text))
 word_list = input_text.split('\n')
-word_list = list(filter(lambda x : len(x) >= 5, word_list))
+
 
 
 # In[3]:
@@ -23,12 +23,12 @@ word_list = list(filter(lambda x : len(x) >= 5, word_list))
 #hyperameters
 seq_length = 4
 learning_rate = 1e-1
-state_size = 8
+state_size = 6
 vocab_size = len(chars)
 batch_size = 1
-num_epochs = 1000
+num_epochs = 10000
 
-
+word_list = list(filter(lambda x : len(x) >= seq_length+1, word_list))
 # In[16]:
 
 def one_hot(character):
@@ -98,7 +98,7 @@ for current_input in input_series:
 
 losses = [tf.nn.softmax_cross_entropy_with_logits(labels=label, logits=tf.transpose(logit)) for label, logit in zip(output_series, logit_series)]
 total_loss = tf.reduce_mean(losses)
-train_step = tf.train.AdamOptimizer(1e-2).minimize(total_loss)
+train_step = tf.train.AdamOptimizer(1e-4).minimize(total_loss)
 
 
 # In[10]:
@@ -135,10 +135,10 @@ with tf.Session() as sess:
     for i in range(num_epochs):
         _current_state = np.zeros((state_size, 1))
         random.shuffle(word_list)
-        long_list = word_list
-        random.shuffle(word_list)
-        long_list += word_list
-        for word in long_list:
+        short_list = word_list[0:99]
+        # random.shuffle(word_list)
+        # long_list += word_list
+        for word in short_list:
             for shifted_pair in generate_shifted_pairs(word, seq_length):
                 x_shift = np.reshape(word_mat(shifted_pair[0]), [vocab_size, seq_length])
                 y_shift = np.reshape(word_mat(shifted_pair[1]), [vocab_size, seq_length])
@@ -150,7 +150,7 @@ with tf.Session() as sess:
             predict_char = one_hot(seed_char)
             seed_state = np.zeros([state_size, 1])
             generated = seed_char
-            for i in range(random.randint(5,10)):
+            for i in range(random.randint(seq_length+1,seq_length+6)):
                 _y, _logit, seed_state = sess.run([y_predict, y_logit, next_state_predict], feed_dict={x_predict:predict_char, current_state_predict:seed_state})
                 generated += chars[np.argmax(_y)]
                 predict_char = one_hot(chars[np.argmax(_y)])
